@@ -20,7 +20,8 @@ using namespace std;
 GLFWwindow* window;
 float posXTriangulo = 0.0f, posYTriangulo = 0.0f;
 double tiempoActual, tiempoAnterior;
-double velocidadTriangulo = 0.2;
+double velocidadTriangulo = 1.0;
+double velocidadAngular = 90.0f;
 float angulo = 0.0f;
 void teclado_callback(GLFWwindow* window,
 	int key, int scancode, int action, int mods) {
@@ -66,24 +67,25 @@ void actualizar() {
 	int estadoDerecha =
 		glfwGetKey(window, GLFW_KEY_RIGHT);
 	if (estadoDerecha == GLFW_PRESS) {
-		posXTriangulo += velocidadTriangulo * tiempoDiferencial;
+		angulo -= velocidadAngular * tiempoDiferencial;
 		
 	}
 	int estadoArriba =
 		glfwGetKey(window, GLFW_KEY_UP);
 	if (estadoArriba == GLFW_PRESS) {
-		posYTriangulo += velocidadTriangulo * tiempoDiferencial;
+		posXTriangulo += (velocidadTriangulo * tiempoDiferencial) * cos((angulo + 90.0) * 3.141592 / 180.0);
+		posYTriangulo += velocidadTriangulo * tiempoDiferencial * sin((angulo + 90.0) * 3.141592 / 180.0);
 	}
 	int estadoIzquierda =
 		glfwGetKey(window, GLFW_KEY_LEFT);
 	if (estadoIzquierda == GLFW_PRESS) {
-		posXTriangulo -= velocidadTriangulo * tiempoDiferencial;
+		angulo += velocidadAngular * tiempoDiferencial;
 	}
-	int estadoAbajo =
+	/*int estadoAbajo =
 		glfwGetKey(window, GLFW_KEY_DOWN);
 	if (estadoAbajo == GLFW_PRESS) {
 		posYTriangulo -= velocidadTriangulo * tiempoDiferencial;
-	}
+	}*/
 
 	tiempoAnterior = tiempoActual;
 }
@@ -92,7 +94,9 @@ void dibujar() {
 	glPushMatrix();
 
 	glTranslatef(posXTriangulo, posYTriangulo, 0.0f);
-	glRotatef(0.0f, 0.0f, 0.0f, 0.0f);
+	glRotatef(angulo, 0.0f, 0.0f, 1.0f);
+	glScalef(0.4f, 0.7f, 0.7f);
+	
 	
 	
 	
